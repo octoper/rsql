@@ -1,4 +1,4 @@
-const ReservedChars: readonly string[] = ['"', "'", "(", ")", ";", ",", "=", "!", "~", "<", ">", " ", "\n", "\t", "\r"];
-type ReservedChar = '"' | "'" | "(" | ")" | ";" | "," | "=" | "!" | "~" | "<" | ">" | " " | "\n" | "\t" | "\r";
+const ReservedChars = ['"', "'", "(", ")", ";", ",", "=", "!", "~", "<", ">", " ", "\n", "\t", "\r"] as const;
+type ReservedChar = (typeof ReservedChars)[number];
 
 export { ReservedChars, ReservedChar };
