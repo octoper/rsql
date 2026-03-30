@@ -1,5 +1,5 @@
-import { isComparisonNode, isLogicNode, isSelectorNode, isValueNode } from "@rsql/ast";
-import { parse } from "@rsql/parser";
+import { isComparisonNode, isLogicNode, isSelectorNode, isValueNode } from "rsql-ast";
+import { parse } from "rsql-parser";
 
 function assert(condition: unknown): asserts condition {
   expect(condition).toBeTruthy();
@@ -22,7 +22,7 @@ describe("parse", () => {
     [{}, 'The argument passed to the "parse" function has to be a string, "[object Object]" passed.'],
     [[], 'The argument passed to the "parse" function has to be a string, "" passed.'],
   ])("throws error for invalid rsql '%p'", (rsql, expectedError) => {
-    expect(() => parse((rsql as unknown) as string)).toThrowError(expectedError);
+    expect(() => parse(rsql as unknown as string)).toThrowError(expectedError);
   });
 
   it.each(["==", "!=", "<=", ">=", "<", ">", "=in=", "=out=", "=le=", "=ge=", "=lt=", "=gt="])(
@@ -38,7 +38,7 @@ describe("parse", () => {
       expect(comparison.operator).toEqual(operator);
       expect(comparison.left.selector).toEqual("selector");
       expect(comparison.right.value).toEqual("value");
-    }
+    },
   );
 
   it('throws exception for comparison operator typo "="', () => {
@@ -58,7 +58,7 @@ describe("parse", () => {
       expect(comparison.operator).toEqual("==");
       expect(comparison.left.selector).toEqual(selector);
       expect(comparison.right.value).toEqual("value");
-    }
+    },
   );
 
   it.each([
@@ -149,7 +149,7 @@ describe("parse", () => {
       expect(comparison.operator).toEqual("==");
       expect(comparison.left.selector).toEqual("selector");
       expect(comparison.right.value).toEqual(value.slice(1, -1));
-    }
+    },
   );
 
   it.each([
@@ -267,7 +267,7 @@ describe("parse", () => {
 
   it("reports proper error for verbose operators", () => {
     expect(() => parse("selector==value and and selector==value")).toThrowError(
-      "Unexpected string 'and' at position 21 in \"selector==value and and selector==value\"."
+      "Unexpected string 'and' at position 21 in \"selector==value and and selector==value\".",
     );
   });
 
@@ -277,7 +277,7 @@ describe("parse", () => {
       const ast = parse(rsql);
 
       expect(ast).toMatchSnapshot();
-    }
+    },
   );
 
   it.each([

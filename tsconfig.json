@@ -1,14 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2020",
     "module": "ESNext",
-    "lib": ["ES5", "ScriptHost"],
-    "moduleResolution": "Node",
+    "lib": ["ES2020"],
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
-    "importHelpers": false,
     "strict": true,
     "baseUrl": ".",
-    "composite": true,
-    "declaration": true
+    "declaration": true,
+    "noEmit": true,
+    "paths": {
+      "rsql-ast": ["packages/ast/src"],
+      "rsql-builder": ["packages/builder/src"],
+      "rsql-emitter": ["packages/emitter/src"],
+      "rsql-parser": ["packages/parser/src"]
+    }
   }
 }

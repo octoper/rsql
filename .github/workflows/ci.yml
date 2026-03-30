@@ -4,169 +4,52 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 12
-
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version: 24
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build project
-        run: yarn build
+        run: pnpm run build
 
-      - name: Upload @rsql/ast artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: ast
-          path: packages/ast/dist
-
-      - name: Upload @rsql/builder artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: builder
-          path: packages/builder/dist
-
-      - name: Upload @rsql/emitter artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: emitter
-          path: packages/emitter/dist
-
-      - name: Upload @rsql/parser artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: parser
-          path: packages/parser/dist
-
-  test:
+  quality:
     runs-on: ${{ matrix.os }}
-    needs: build
     strategy:
       matrix:
         os:
           - ubuntu-latest
         node:
-          - "8"
-          - "10"
-          - "12"
+          - "22"
+          - "24"
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.node }}-yarn-
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --ignore-engines
+        run: pnpm install --frozen-lockfile
 
-      - name: Download @rsql/ast artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: ast
-          path: packages/ast/dist
+      - name: Lint
+        run: pnpm run lint --format=github
 
-      - name: Download @rsql/builder artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: builder
-          path: packages/builder/dist
-
-      - name: Download @rsql/emitter artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: emitter
-          path: packages/emitter/dist
-
-      - name: Download @rsql/parser artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: parser
-          path: packages/parser/dist
+      - name: Check formatting
+        run: pnpm run fmt:check
 
       - name: Run tests
-        run: yarn test
-
-  release:
-    runs-on: ubuntu-latest
-    needs: test
-    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Prepare repository
-        run: git fetch --unshallow --tags
-
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile --ignore-engines
-
-      - name: Download @rsql/ast artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: ast
-          path: packages/ast/dist
-
-      - name: Download @rsql/builder artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: builder
-          path: packages/builder/dist
-
-      - name: Download @rsql/emitter artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: emitter
-          path: packages/emitter/dist
-
-      - name: Download @rsql/parser artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: parser
-          path: packages/parser/dist
-
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn release
+        run: pnpm run test

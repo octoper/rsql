@@ -1,9 +1,5 @@
 {
   "extends": "../../tsconfig",
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./lib"
-  },
-  "references": [{ "path": "../ast" }],
-  "exclude": ["node_modules", "lib", "dist"]
+  "include": ["src", "__tests__"],
+  "exclude": ["node_modules", "dist"]
 }

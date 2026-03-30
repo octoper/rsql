@@ -17,13 +17,13 @@ import {
   createLogicNode,
   ComparisonNode,
   ExpressionNode,
-} from "@rsql/ast";
+} from "rsql-ast";
 
 interface Builder {
   comparison(
     selector: string,
     operator: ComparisonOperator,
-    value: string | number | (string | number)[]
+    value: string | number | (string | number)[],
   ): ComparisonNode;
   eq(selector: string, value: string | number): ComparisonNode;
   neq(selector: string, value: string | number): ComparisonNode;
@@ -43,7 +43,7 @@ const builder: Builder = {
     return createComparisonNode(
       createSelectorNode(selector),
       operator,
-      createValueNode(Array.isArray(value) ? value.map((singleValue) => String(singleValue)) : String(value))
+      createValueNode(Array.isArray(value) ? value.map((singleValue) => String(singleValue)) : String(value)),
     );
   },
   eq(selector, value) {
@@ -79,7 +79,7 @@ const builder: Builder = {
       .slice(1)
       .reduce(
         (leftExpression, rightExpression) => createLogicNode(leftExpression, operator, rightExpression),
-        expressions[0]
+        expressions[0],
       );
   },
   and(...expressions) {

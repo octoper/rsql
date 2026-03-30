@@ -1,9 +1,5 @@
 {
   "extends": "../../tsconfig",
-  "compilerOptions": {
-    "composite": true,
-    "rootDir": "./src",
-    "outDir": "./lib"
-  },
-  "exclude": ["node_modules", "lib", "dist"]
+  "include": ["src", "__tests__"],
+  "exclude": ["node_modules", "dist"]
 }

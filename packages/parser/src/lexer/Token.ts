@@ -1,4 +1,4 @@
-import { ComparisonOperator, isLogicOperator, isComparisonOperator, LogicOperator, OR, AND } from "@rsql/ast";
+import { ComparisonOperator, isLogicOperator, isComparisonOperator, LogicOperator, OR, AND } from "rsql-ast";
 
 const TokenType = {
   UNQUOTED: "UNQUOTED",
@@ -39,7 +39,7 @@ function createUnquotedToken(value: string, position: number): UnquotedToken {
       value,
       position,
     },
-    () => `UnquotedToken(${value})`
+    () => `UnquotedToken(${value})`,
   );
 }
 
@@ -50,7 +50,7 @@ function createQuotedToken(value: string, position: number): QuotedToken {
       value,
       position,
     },
-    () => `QuotedToken(${value})`
+    () => `QuotedToken(${value})`,
   );
 }
 
@@ -61,7 +61,7 @@ function createParenthesisToken(value: "(" | ")", position: number): Parenthesis
       value,
       position,
     },
-    () => `ParenthesisToken(${value})`
+    () => `ParenthesisToken(${value})`,
   );
 }
 
@@ -72,7 +72,7 @@ function createOperatorToken(value: ComparisonOperator | LogicOperator, position
       value,
       position,
     },
-    () => `OperatorToken(${value})`
+    () => `OperatorToken(${value})`,
   );
 }
 
@@ -83,7 +83,7 @@ function createEndToken(position: number): EndToken {
       value: "END",
       position,
     },
-    () => `EndToken`
+    () => `EndToken`,
   );
 }
 
