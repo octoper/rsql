@@ -14,16 +14,16 @@ const GT_VERBOSE = "=gt=" as const;
 type CustomComparisonOperator = string;
 
 const CanonicalComparisonOperators = [EQ, NEQ, LE, GE, LT, GT, IN, OUT];
-type CanonicalComparisonOperator = typeof CanonicalComparisonOperators[number];
+type CanonicalComparisonOperator = (typeof CanonicalComparisonOperators)[number];
 
 const VerboseComparisonOperators = [LE_VERBOSE, GE_VERBOSE, LT_VERBOSE, GT_VERBOSE];
-type VerboseComparisonOperator = typeof VerboseComparisonOperators[number];
+type VerboseComparisonOperator = (typeof VerboseComparisonOperators)[number];
 
 const ComparisonOperators = [EQ, NEQ, LE, GE, LT, GT, IN, OUT, LE_VERBOSE, GE_VERBOSE, LT_VERBOSE, GT_VERBOSE];
-type ComparisonOperator = typeof ComparisonOperators[number] | CustomComparisonOperator;
+type ComparisonOperator = (typeof ComparisonOperators)[number] | CustomComparisonOperator;
 
 function mapToCanonicalComparisonOperator(
-  operator: ComparisonOperator
+  operator: ComparisonOperator,
 ): CanonicalComparisonOperator | CustomComparisonOperator {
   switch (operator) {
     case LE_VERBOSE:

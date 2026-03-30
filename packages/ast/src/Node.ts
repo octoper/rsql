@@ -25,7 +25,7 @@ interface BinaryNode<
   TType extends string = string,
   TLeft extends Node = Node,
   TOperator extends string = string,
-  TRight extends Node = Node
+  TRight extends Node = Node,
 > extends Node<TType> {
   readonly left: TLeft;
   readonly operator: TOperator;
@@ -61,7 +61,7 @@ function createSelectorNode(selector: string, skipChecks = false): SelectorNode 
     if (reservedChar) {
       const position = selector.indexOf(reservedChar) + 1;
       throw new Error(
-        `The "selector" contains reserved character '${reservedChar}' at position ${position} in "${selector}".`
+        `The "selector" contains reserved character '${reservedChar}' at position ${position} in "${selector}".`,
       );
     }
   }
@@ -71,7 +71,7 @@ function createSelectorNode(selector: string, skipChecks = false): SelectorNode 
       type: NodeType.SELECTOR,
       selector,
     },
-    () => `SelectorNode("${selector}")`
+    () => `SelectorNode("${selector}")`,
   );
 }
 
@@ -91,7 +91,7 @@ function createValueNode(value: string | string[], skipChecks = false): ValueNod
       type: NodeType.VALUE,
       value,
     },
-    () => `ValueNode(${JSON.stringify(value)})`
+    () => `ValueNode(${JSON.stringify(value)})`,
   );
 }
 
@@ -99,7 +99,7 @@ function createComparisonNode(
   selector: SelectorNode,
   operator: ComparisonOperator,
   value: ValueNode,
-  skipChecks = false
+  skipChecks = false,
 ): ComparisonNode {
   if (!skipChecks) {
     if (!isSelectorNode(selector)) {
@@ -123,7 +123,7 @@ function createComparisonNode(
       operator: operator,
       right: value,
     },
-    () => `ComparisonNode(${selector},${operator},${value})`
+    () => `ComparisonNode(${selector},${operator},${value})`,
   );
 }
 
@@ -131,7 +131,7 @@ function createLogicNode(
   left: ExpressionNode,
   operator: LogicOperator,
   right: ExpressionNode,
-  skipChecks = false
+  skipChecks = false,
 ): LogicNode {
   if (!skipChecks) {
     if (!isExpressionNode(left)) {
@@ -155,7 +155,7 @@ function createLogicNode(
       operator: operator,
       right,
     },
-    () => `LogicNode(${left},${operator},${right})`
+    () => `LogicNode(${left},${operator},${right})`,
   );
 }
 
@@ -211,7 +211,7 @@ function getSingleValue(comparison: ComparisonNode): string {
   const value = getValue(comparison);
   if (Array.isArray(value)) {
     throw new Error(
-      'The "comparison" passed to the "getSingleValue" function has to contain string value, but contains an array.'
+      'The "comparison" passed to the "getSingleValue" function has to contain string value, but contains an array.',
     );
   }
 
@@ -222,7 +222,7 @@ function getMultiValue(comparison: ComparisonNode): string[] {
   const value = getValue(comparison);
   if (typeof value === "string") {
     throw new Error(
-      'The "comparison" passed to the "getMultiValue" function has to contain array value, but contains a single string.'
+      'The "comparison" passed to the "getMultiValue" function has to contain array value, but contains a single string.',
     );
   }
 

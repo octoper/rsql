@@ -12,7 +12,7 @@ import {
   LogicNode,
   SelectorNode,
   ValueNode,
-} from "@rsql/ast";
+} from "rsql-ast";
 
 type Quote = '"' | "'";
 
@@ -60,7 +60,7 @@ function selectQuote(
   {
     preferredQuote = DEFAULT_EMIT_OPTIONS.preferredQuote,
     optimizeQuotes = DEFAULT_EMIT_OPTIONS.optimizeQuotes,
-  }: EmitOptions
+  }: EmitOptions,
 ) {
   if (optimizeQuotes) {
     const otherQuote: Quote = preferredQuote === '"' ? "'" : '"';
@@ -126,7 +126,7 @@ function emitWithoutOptionsValidation(expression: ExpressionNode, options: EmitO
 function emit(expression: ExpressionNode, options: EmitOptions = {}) {
   if (options.preferredQuote !== undefined && options.preferredQuote !== '"' && options.preferredQuote !== "'") {
     throw new TypeError(
-      `Invalid "preferredQuote" option: ${options.preferredQuote}. Must be either " (the ASCII double quote character) or ' (the ASCII single quote character).`
+      `Invalid "preferredQuote" option: ${options.preferredQuote}. Must be either " (the ASCII double quote character) or ' (the ASCII single quote character).`,
     );
   }
   return emitWithoutOptionsValidation(expression, options);

@@ -78,8 +78,6 @@
 
 # v1.3.3 (Wed Jun 29 2022)
 
-
-
 ---
 
 # v1.3.2 (Sun Mar 27 2022)
@@ -224,7 +222,7 @@
 
 - chore(deps): bump y18n from 4.0.0 to 4.0.1 [#16](https://github.com/piotr-oles/rsql/pull/16) ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
-#### ⚠️  Pushed to `master`
+#### ⚠️ Pushed to `master`
 
 - docs: add funding.yml ([@piotr-oles](https://github.com/piotr-oles))
 - docs: add issues templates ([@piotr-oles](https://github.com/piotr-oles))

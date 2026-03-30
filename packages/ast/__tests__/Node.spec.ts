@@ -16,7 +16,7 @@ import {
   ComparisonNode,
   LogicNode,
   ExpressionNode,
-} from "@rsql/ast";
+} from "rsql-ast";
 
 describe("Node", () => {
   it("exports node factories", () => {
@@ -108,7 +108,7 @@ describe("Node", () => {
     (value, error) => {
       expect(() => createValueNode(value)).toThrowError(error);
       expect(() => createValueNode(value, true)).not.toThrowError();
-    }
+    },
   );
 
   it.each(["==", "!=", ">", ">=", "<", "<=", "=in=", "=out=", "=gt=", "=ge=", "=lt=", "=le="] as const)(
@@ -123,7 +123,7 @@ describe("Node", () => {
       expect(comparison.right).toEqual(value);
       expect(comparison.operator).toEqual(operator);
       expect(comparison.toString()).toEqual(`ComparisonNode(SelectorNode("selector"),${operator},ValueNode("value"))`);
-    }
+    },
   );
 
   it.each([";", ","] as const)("creates logic expression node for operator '%p'", (operator) => {
@@ -136,7 +136,7 @@ describe("Node", () => {
     expect(logic.right).toEqual(right);
     expect(logic.operator).toEqual(operator);
     expect(logic.toString()).toEqual(
-      `LogicNode(ComparisonNode(SelectorNode("selectorA"),==,ValueNode("valueA")),${operator},ComparisonNode(SelectorNode("selectorB"),=out=,ValueNode(["valueB","valueC"])))`
+      `LogicNode(ComparisonNode(SelectorNode("selectorA"),==,ValueNode("valueA")),${operator},ComparisonNode(SelectorNode("selectorB"),=out=,ValueNode(["valueB","valueC"])))`,
     );
   });
 

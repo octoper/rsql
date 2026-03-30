@@ -6,7 +6,7 @@ function createScanNonReservedSymbol<TSymbol extends string>(symbols: ReadonlyAr
       symbols.find(
         (symbol) =>
           context.buffer.substr(context.position, symbol.length) === symbol &&
-          context.buffer[context.position + symbol.length] === " "
+          context.buffer[context.position + symbol.length] === " ",
       ) || null
     );
   };

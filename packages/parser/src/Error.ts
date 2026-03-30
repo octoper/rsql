@@ -18,13 +18,13 @@ function createErrorForUnexpectedToken(token: AnyToken, source: string): SyntaxE
       ? `Unexpected end in "${source}".`
       : `Unexpected ${token.value.length > 1 ? "string" : "character"} '${token.value}' at position ${
           token.position + 1
-        } in "${source}".`
+        } in "${source}".`,
   );
 }
 
 function createErrorForUnclosedParenthesis(token: AnyToken, source: string, parentPosition: number): SyntaxError {
   return new SyntaxError(
-    `Unexpected end in "${source}". Did you forget to close parenthesis at position ${parentPosition + 1}?`
+    `Unexpected end in "${source}". Did you forget to close parenthesis at position ${parentPosition + 1}?`,
   );
 }
 

@@ -1,15 +1,20 @@
 {
-  "name": "@rsql/parser",
+  "name": "rsql-parser",
   "description": "RSQL Parser",
-  "repository": "https://github.com/piotr-oles/rsql.git",
+  "repository": "https://github.com/octoper/rsql.git",
   "license": "MIT",
   "author": "Piotr Oleś <piotrek.oles@gmail.com>",
-  "version": "1.6.0",
+  "version": "0.0.0",
+  "type": "module",
   "sideEffects": false,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.umd.js",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -19,20 +24,14 @@
     "parser"
   ],
   "scripts": {
-    "build:clean": "rm -rf ./lib && rm -f tsconfig.tsbuildinfo && rm -rf ./dist",
-    "build:lib": "tsc -b tsconfig.json",
-    "build:dist": "rollup -c && node ../../patches/dts-bundle/index.js --name \"@rsql/parser\" --main lib/index.d.ts --out ../dist/index.d.ts --outputAsModuleFolder && prettier --write ./dist",
-    "build": "yarn build:clean && yarn build:lib && yarn build:dist"
+    "build": "tsdown",
+    "test": "vitest run --project parser"
   },
   "engines": {
-    "node": ">= 8"
+    "node": ">= 22"
   },
   "dependencies": {
-    "@rsql/ast": "^1.6.0"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
+    "rsql-ast": "workspace:^"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

@@ -1,4 +1,4 @@
-import { ComparisonOperators } from "@rsql/ast";
+import { ComparisonOperators } from "rsql-ast";
 import { createOperatorToken, OperatorToken } from "../Token";
 import { SeekProcessor } from "../LexerProcessor";
 import { createScanSymbol } from "./scanSymbol";

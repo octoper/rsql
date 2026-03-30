@@ -1,6 +1,6 @@
-import builder from "@rsql/builder";
-import { parse } from "@rsql/parser";
-import { emit } from "@rsql/emitter";
+import builder from "rsql-builder";
+import { parse } from "rsql-parser";
+import { emit } from "rsql-emitter";
 
 describe("emit", () => {
   it.each(["==", "!=", "<=", ">=", "<", ">", "=in=", "=out=", "=le=", "=ge=", "=lt=", "=gt="])(
@@ -12,7 +12,7 @@ describe("emit", () => {
       const expectedRsql = `selector${operator}value`;
 
       expect(emittedRsql).toEqual(expectedRsql);
-    }
+    },
   );
 
   it.each(["allons-y", "l00k.dot.path", "look/XML/path", "n:look/n:xml", "path.to::Ref", "$doll_r.way"])(
@@ -23,7 +23,7 @@ describe("emit", () => {
       const emittedRsql = emit(ast);
 
       expect(emittedRsql).toEqual(rsql);
-    }
+    },
   );
 
   it.each(["«Allons-y»", "h@llo", "*star*", "čes*ký", "42", "0.15", "3:15"])('emits unquoted value "%p"', (value) => {

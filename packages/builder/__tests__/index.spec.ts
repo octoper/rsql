@@ -1,12 +1,12 @@
-import builder from "@rsql/builder";
-import { emit } from "@rsql/emitter";
+import builder from "rsql-builder";
+import { emit } from "rsql-emitter";
 
 describe("builder", () => {
   it("creates 1 level depth query", () => {
     const ast = builder.and(
       builder.eq("user.id", "1884"),
       builder.ge("user.name", "John"),
-      builder.in("user.role", ["Admin", "Moderator"])
+      builder.in("user.role", ["Admin", "Moderator"]),
     );
 
     expect(emit(ast)).toEqual("user.id==1884;user.name>=John;user.role=in=(Admin,Moderator)");
@@ -16,7 +16,7 @@ describe("builder", () => {
     const ast = builder.and(
       builder.eq("user.id", "1884"),
       builder.ge("user.name", "John"),
-      builder.or(builder.eq("user.superAdmin", "true"), builder.in("user.role", ["Admin", "Moderator"]))
+      builder.or(builder.eq("user.superAdmin", "true"), builder.in("user.role", ["Admin", "Moderator"])),
     );
 
     expect(emit(ast)).toEqual("user.id==1884;user.name>=John;(user.superAdmin==true,user.role=in=(Admin,Moderator))");

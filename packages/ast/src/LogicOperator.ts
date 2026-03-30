@@ -4,13 +4,13 @@ const AND_VERBOSE = "and" as const;
 const OR_VERBOSE = "or" as const;
 
 const CanonicalLogicOperators = [AND, OR];
-type CanonicalLogicOperator = typeof CanonicalLogicOperators[number];
+type CanonicalLogicOperator = (typeof CanonicalLogicOperators)[number];
 
 const VerboseLogicOperators = [AND_VERBOSE, OR_VERBOSE];
-type VerboseLogicOperator = typeof VerboseLogicOperators[number];
+type VerboseLogicOperator = (typeof VerboseLogicOperators)[number];
 
 const LogicOperators = [AND, OR, AND_VERBOSE, OR_VERBOSE];
-type LogicOperator = typeof LogicOperators[number];
+type LogicOperator = (typeof LogicOperators)[number];
 
 function mapToCanonicalLogicOperator(operator: LogicOperator): CanonicalLogicOperator {
   switch (operator) {
