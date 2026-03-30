@@ -652,4 +652,79 @@ describe("toDrizzle", () => {
       ).toThrow(UnsupportedOperatorError);
     });
   });
+
+  describe("OWASP RSQL injection patterns", () => {
+    it("treats wildcard * as a literal value, not a glob", () => {
+      const ast = parse("name==*");
+      const { sql, params } = toQuery(toDrizzle(ast, { columns }));
+      expect(sql).toBe('"users"."name" = $1');
+      expect(params).toEqual(["*"]);
+    });
+
+    it("treats SQL LIKE wildcard % as a literal value", () => {
+      const ast = parse("name=='%admin%'");
+      const { sql, params } = toQuery(toDrizzle(ast, { columns }));
+      expect(sql).toBe('"users"."name" = $1');
+      expect(params).toEqual(["%admin%"]);
+    });
+
+    it("treats SQL underscore wildcard _ as a literal value", () => {
+      const ast = parse("name=='admin_'");
+      const { sql, params } = toQuery(toDrizzle(ast, { columns }));
+      expect(sql).toBe('"users"."name" = $1');
+      expect(params).toEqual(["admin_"]);
+    });
+
+    it("parameterizes blind enumeration patterns in =in= arrays", () => {
+      const ast = parse("name=in=('*a*','*b*')");
+      const { sql, params } = toQuery(toDrizzle(ast, { columns }));
+      expect(sql).toBe('"users"."name" in ($1, $2)');
+      expect(params).toEqual(["*a*", "*b*"]);
+    });
+
+    it("blocks nested field traversal with UnknownColumnError", () => {
+      const ast = parse("user.password==secret");
+      expect(() =>
+        toDrizzle(ast, {
+          tables: { user: { name: users.name } },
+        }),
+      ).toThrow(UnknownColumnError);
+    });
+
+    it("blocks deep traversal (multi-dot) with UnknownTableError", () => {
+      // "user.profile.ssn" — the parser sees "user.profile.ssn" as the selector.
+      // The first dot splits into table="user", column="profile.ssn".
+      // "profile.ssn" is not a valid column in the user table.
+      const ast = parse("user.profile.ssn==123");
+      expect(() =>
+        toDrizzle(ast, {
+          tables: { user: { name: users.name } },
+        }),
+      ).toThrow(UnknownColumnError);
+    });
+
+    it("parameterizes reverse logic (!=) values", () => {
+      const ast = parse("status!=user");
+      const { sql, params } = toQuery(toDrizzle(ast, { columns }));
+      expect(sql).toBe('"users"."status" <> $1');
+      expect(params).toEqual(["user"]);
+    });
+
+    it("rejects unquoted SQL fragment via parser", () => {
+      expect(() => parse("name==1=1")).toThrow(SyntaxError);
+    });
+
+    it("rejects SQL OR injection via parser", () => {
+      // "name==value OR 1=1" — "OR" is parsed as a verbose OR operator,
+      // then "1=1" fails because "=" is not a valid comparison operator form
+      expect(() => parse("name==value OR 1=1")).toThrow(SyntaxError);
+    });
+
+    it("safely parameterizes UNION injection in quoted values", () => {
+      const ast = parse(`name=="' UNION SELECT * --"`);
+      const { sql, params } = toQuery(toDrizzle(ast, { columns }));
+      expect(sql).toBe('"users"."name" = $1');
+      expect(params).toEqual(["' UNION SELECT * --"]);
+    });
+  });
 });

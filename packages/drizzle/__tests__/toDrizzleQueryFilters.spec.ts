@@ -488,4 +488,68 @@ describe("toDrizzleQueryFilters", () => {
       ).toThrow(UnknownColumnError);
     });
   });
+
+  describe("OWASP RSQL injection patterns", () => {
+    it("treats wildcard * as a literal value, not a glob", () => {
+      const ast = parse("name==*");
+      const result = toDrizzleQueryFilters(ast, { selectors: ["name"] });
+      expect(result).toEqual({ name: { eq: "*" } });
+    });
+
+    it("treats SQL LIKE wildcard % as a literal value", () => {
+      const ast = parse("name=='%admin%'");
+      const result = toDrizzleQueryFilters(ast, { selectors: ["name"] });
+      expect(result).toEqual({ name: { eq: "%admin%" } });
+    });
+
+    it("treats SQL underscore wildcard _ as a literal value", () => {
+      const ast = parse("name=='admin_'");
+      const result = toDrizzleQueryFilters(ast, { selectors: ["name"] });
+      expect(result).toEqual({ name: { eq: "admin_" } });
+    });
+
+    it("parameterizes blind enumeration patterns in =in= arrays", () => {
+      const ast = parse("name=in=('*a*','*b*')");
+      const result = toDrizzleQueryFilters(ast, { selectors: ["name"] });
+      expect(result).toEqual({ name: { in: ["*a*", "*b*"] } });
+    });
+
+    it("blocks nested field traversal with UnknownColumnError", () => {
+      const ast = parse("user.password==secret");
+      expect(() =>
+        toDrizzleQueryFilters(ast, {
+          tables: { user: ["name"] },
+        }),
+      ).toThrow(UnknownColumnError);
+    });
+
+    it("blocks deep traversal (multi-dot) with UnknownColumnError", () => {
+      const ast = parse("user.profile.ssn==123");
+      expect(() =>
+        toDrizzleQueryFilters(ast, {
+          tables: { user: ["name"] },
+        }),
+      ).toThrow(UnknownColumnError);
+    });
+
+    it("parameterizes reverse logic (!=) values", () => {
+      const ast = parse("status!=user");
+      const result = toDrizzleQueryFilters(ast, { selectors: ["status"] });
+      expect(result).toEqual({ status: { ne: "user" } });
+    });
+
+    it("rejects unquoted SQL fragment via parser", () => {
+      expect(() => parse("name==1=1")).toThrow(SyntaxError);
+    });
+
+    it("rejects SQL OR injection via parser", () => {
+      expect(() => parse("name==value OR 1=1")).toThrow(SyntaxError);
+    });
+
+    it("safely stores UNION injection in quoted values as literal strings", () => {
+      const ast = parse(`name=="' UNION SELECT * --"`);
+      const result = toDrizzleQueryFilters(ast, { selectors: ["name"] });
+      expect(result).toEqual({ name: { eq: "' UNION SELECT * --" } });
+    });
+  });
 });
