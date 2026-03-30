@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { isComparisonNode, isLogicNode, isSelectorNode, isValueNode } from "@resenty/rsql-ast";
 import { parse } from "@resenty/rsql-parser";
 

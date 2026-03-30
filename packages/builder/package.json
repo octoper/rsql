@@ -34,7 +34,8 @@
     "@resenty/rsql-ast": "workspace:^"
   },
   "devDependencies": {
-    "@resenty/rsql-emitter": "workspace:^"
+    "@resenty/rsql-emitter": "workspace:^",
+    "vitest": "^3.0.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

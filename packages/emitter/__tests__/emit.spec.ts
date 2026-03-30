@@ -1,3 +1,4 @@
+import { describe, it, test, expect } from "vitest";
 import builder from "@resenty/rsql-builder";
 import { parse } from "@resenty/rsql-parser";
 import { emit } from "@resenty/rsql-emitter";
