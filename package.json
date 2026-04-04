@@ -5,7 +5,7 @@
   "description": "RSQL compiler and parser for Node.js and Browsers",
   "repository": "https://github.com/octoper/rsql.git",
   "license": "MIT",
-  "author": "Piotr Oleś <piotrek.oles@gmail.com>",
+  "author": "octoper <me@octoper.me>",
   "packageManager": "pnpm@10.31.0",
   "engines": {
     "node": ">= 22"
