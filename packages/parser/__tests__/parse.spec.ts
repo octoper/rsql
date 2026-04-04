@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { isComparisonNode, isLogicNode, isSelectorNode, isValueNode } from "@resenty/rsql-ast";
 import { parse } from "@resenty/rsql-parser";
 
@@ -310,5 +311,104 @@ describe("parse", () => {
     expect(ast.left.selector).toEqual("genres");
     expect(ast.operator).toEqual("=all=");
     expect(ast.right.value).toEqual(["thriller", "sci-fi"]);
+  });
+
+  describe("security limits", () => {
+    describe("maxInputLength", () => {
+      it("rejects input exceeding default limit of 4096", () => {
+        const long = "a".repeat(4097) + "==value";
+        expect(() => parse(long)).toThrowError("Input length 4104 exceeds maximum allowed length of 4096.");
+      });
+
+      it("accepts input within default limit", () => {
+        const input = `${"a".repeat(100)}==value`;
+        expect(() => parse(input)).not.toThrow();
+      });
+
+      it("respects custom maxInputLength", () => {
+        const input = "selector==value"; // 15 chars
+        expect(() => parse(input, { maxInputLength: 10 })).toThrowError(
+          "Input length 15 exceeds maximum allowed length of 10.",
+        );
+      });
+
+      it("allows Infinity to disable the limit", () => {
+        const long = "a".repeat(10000) + "==value";
+        expect(() => parse(long, { maxInputLength: Infinity })).not.toThrow();
+      });
+    });
+
+    describe("maxNestingDepth", () => {
+      it("rejects nesting exceeding default limit of 64", () => {
+        const open = "(".repeat(65);
+        const close = ")".repeat(65);
+        const input = `${open}a==b${close}`;
+        expect(() => parse(input, { maxInputLength: Infinity })).toThrowError(
+          "Nesting depth 65 exceeds maximum allowed depth of 64.",
+        );
+      });
+
+      it("accepts nesting within default limit", () => {
+        const open = "(".repeat(3);
+        const close = ")".repeat(3);
+        const input = `${open}a==b${close}`;
+        expect(() => parse(input)).not.toThrow();
+      });
+
+      it("respects custom maxNestingDepth", () => {
+        const input = "((a==b))";
+        expect(() => parse(input, { maxNestingDepth: 1 })).toThrowError(
+          "Nesting depth 2 exceeds maximum allowed depth of 1.",
+        );
+      });
+
+      it("allows Infinity to disable the limit", () => {
+        const open = "(".repeat(100);
+        const close = ")".repeat(100);
+        const input = `${open}a==b${close}`;
+        expect(() => parse(input, { maxInputLength: Infinity, maxNestingDepth: Infinity })).not.toThrow();
+      });
+    });
+
+    describe("safeErrors", () => {
+      it("redacts source in unexpected character errors", () => {
+        expect(() => parse("ill~==value", { safeErrors: true })).toThrowError(
+          `Unexpected character '~' at position 4 in "<redacted>".`,
+        );
+      });
+
+      it("redacts source in unclosed quote errors", () => {
+        expect(() => parse(`selector=="unclosed`, { safeErrors: true })).toThrowError(
+          `Unclosed quote '"' at position 11 in "<redacted>".`,
+        );
+      });
+
+      it("redacts source in unclosed parenthesis errors", () => {
+        expect(() => parse("(a==b;c!=d", { safeErrors: true })).toThrowError(
+          `Unexpected end in "<redacted>". Did you forget to close parenthesis at position 1?`,
+        );
+      });
+
+      it("redacts source in empty input errors", () => {
+        expect(() => parse("", { safeErrors: true })).toThrowError(
+          `Unexpected end in "<redacted>". Cannot parse empty string.`,
+        );
+      });
+
+      it("redacts source in unexpected token errors", () => {
+        expect(() => parse("==value", { safeErrors: true })).toThrowError(
+          `Unexpected string '==' at position 1 in "<redacted>".`,
+        );
+      });
+
+      it("preserves position info when redacting", () => {
+        try {
+          parse("ill~==value", { safeErrors: true });
+        } catch (e) {
+          expect((e as SyntaxError).message).toContain("position 4");
+          expect((e as SyntaxError).message).not.toContain("ill~");
+        }
+      });
+    });
   });
 });

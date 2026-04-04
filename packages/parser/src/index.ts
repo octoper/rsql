@@ -1,5 +1,11 @@
 import { ExpressionNode, isExpressionNode, isSelectorNode, isValueNode, Node } from "@resenty/rsql-ast";
-import { createErrorForEmptyInput, createErrorForUnclosedParenthesis, createErrorForUnexpectedToken } from "./Error";
+import {
+  createErrorForEmptyInput,
+  createErrorForInputTooLong,
+  createErrorForNestingTooDeep,
+  createErrorForUnclosedParenthesis,
+  createErrorForUnexpectedToken,
+} from "./Error";
 import lex from "./lexer/lex";
 import Token, {
   AnyToken,
@@ -44,6 +50,18 @@ import {
   selectorProduction,
   singleValueProduction,
 } from "./ParserProduction";
+
+interface ParseOptions {
+  /** Maximum input string length. Default: 4096. Set to Infinity to disable. */
+  maxInputLength?: number;
+  /** Maximum parenthesis nesting depth. Default: 64. Set to Infinity to disable. */
+  maxNestingDepth?: number;
+  /** When true, error messages omit the raw input string. Default: false. */
+  safeErrors?: boolean;
+}
+
+const DEFAULT_MAX_INPUT_LENGTH = 4096;
+const DEFAULT_MAX_NESTING_DEPTH = 64;
 
 const productions: ParserProduction[] = [
   /* 0 */ selectorProduction,
@@ -140,7 +158,12 @@ function handleGoTo(context: ParserContext, gotoOperation: GoToOperation): Parse
   return context;
 }
 
-function handleReduce(context: ParserContext, reduceOperation: ReduceOperation, input: string): ParserContext {
+function handleReduce(
+  context: ParserContext,
+  reduceOperation: ReduceOperation,
+  input: string,
+  safeErrors?: boolean,
+): ParserContext {
   const { consumed, produced } = productions[reduceOperation.production](context.stack);
 
   // we can perform side-effects on reduce operation to reduce memory usage
@@ -157,15 +180,20 @@ function handleReduce(context: ParserContext, reduceOperation: ReduceOperation, 
   if (gotoOperation) {
     context = handleGoTo(context, gotoOperation);
   } else {
-    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input);
+    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input, safeErrors);
   }
 
   return context;
 }
 
-function handlePop(context: ParserContext, popOperation: PopOperation, input: string): ParserContext {
+function handlePop(
+  context: ParserContext,
+  popOperation: PopOperation,
+  input: string,
+  safeErrors?: boolean,
+): ParserContext {
   if (!context.parent) {
-    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input);
+    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input, safeErrors);
   }
 
   const { produced } = productions[popOperation.production](context.stack);
@@ -184,32 +212,54 @@ function handlePop(context: ParserContext, popOperation: PopOperation, input: st
   if (gotoOperation) {
     context = handleGoTo(context, gotoOperation);
   } else {
-    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input);
+    throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), input, safeErrors);
   }
 
   return context;
 }
 
-function handleAccept(context: ParserContext, input: string): ExpressionNode {
+function handleAccept(context: ParserContext, input: string, safeErrors?: boolean): ExpressionNode {
   if (context.parent !== null) {
-    throw createErrorForUnclosedParenthesis(getMostMeaningfulInvalidToken(context), input, context.parent.position);
+    throw createErrorForUnclosedParenthesis(
+      getMostMeaningfulInvalidToken(context),
+      input,
+      context.parent.position,
+      safeErrors,
+    );
   }
 
   return getParserContextHead(context) as ExpressionNode;
 }
 
-function parse(source: string): ExpressionNode {
+function parse(source: string, options?: ParseOptions): ExpressionNode {
   if (typeof source !== "string") {
     throw new TypeError(`The argument passed to the "parse" function has to be a string, "${source}" passed.`);
   }
 
-  const tokens = lex(source);
+  const maxInputLength = options?.maxInputLength ?? DEFAULT_MAX_INPUT_LENGTH;
+  const maxNestingDepth = options?.maxNestingDepth ?? DEFAULT_MAX_NESTING_DEPTH;
+  const safeErrors = options?.safeErrors ?? false;
+
+  if (source.length > maxInputLength) {
+    throw createErrorForInputTooLong(source.length, maxInputLength);
+  }
+
+  let tokens: AnyToken[];
+  try {
+    tokens = lex(source);
+  } catch (error) {
+    if (safeErrors && error instanceof SyntaxError) {
+      throw new SyntaxError(error.message.replace(` in "${source}"`, ' in "<redacted>"'));
+    }
+    throw error;
+  }
 
   if (tokens.length === 1 && tokens[0].type === "END") {
-    throw createErrorForEmptyInput(tokens[0], source);
+    throw createErrorForEmptyInput(tokens[0], source, safeErrors);
   }
 
   let context = createParserContext(tokens);
+  let nestingDepth = 0;
 
   while (context.position < context.tokens.length) {
     const state = getParserContextState(context);
@@ -217,7 +267,7 @@ function parse(source: string): ExpressionNode {
     const operation = getParserTokenOperation(state, token);
 
     if (!operation) {
-      throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source);
+      throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source, safeErrors);
     }
 
     switch (operation.type) {
@@ -226,23 +276,29 @@ function parse(source: string): ExpressionNode {
         break;
 
       case OperationType.PUSH:
+        nestingDepth++;
+        if (nestingDepth > maxNestingDepth) {
+          throw createErrorForNestingTooDeep(nestingDepth, maxNestingDepth);
+        }
         context = handlePush(context, operation);
         break;
 
       case OperationType.REDUCE:
-        context = handleReduce(context, operation, source);
+        context = handleReduce(context, operation, source, safeErrors);
         break;
 
       case OperationType.POP:
-        context = handlePop(context, operation, source);
+        nestingDepth--;
+        context = handlePop(context, operation, source, safeErrors);
         break;
 
       case OperationType.ACCEPT:
-        return handleAccept(context, source);
+        return handleAccept(context, source, safeErrors);
     }
   }
 
-  throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source);
+  throw createErrorForUnexpectedToken(getMostMeaningfulInvalidToken(context), source, safeErrors);
 }
 
 export { parse };
+export type { ParseOptions };

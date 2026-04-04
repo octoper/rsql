@@ -40,6 +40,15 @@ export default defineConfig({
           include: ["__tests__/**/*.spec.ts"],
         },
       },
+      {
+        test: {
+          name: "drizzle",
+          root: resolve(__dirname, "packages/drizzle"),
+          globals: true,
+          environment: "node",
+          include: ["__tests__/**/*.spec.ts"],
+        },
+      },
     ],
   },
 });
