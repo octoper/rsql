@@ -1,5 +1,12 @@
 # v1.0.2 (Thu Oct 08 2020)
 
+## 0.0.1
+
+### Patch Changes
+
+- cdbbfb4: Update author and reset changelog
+- ac9d243: Initial release
+
 #### 🐛 Bug Fix
 
 - fix: use declare keyword in the .d.ts files [#10](https://github.com/piotr-oles/rsql/pull/10) ([@piotr-oles](https://github.com/piotr-oles))
