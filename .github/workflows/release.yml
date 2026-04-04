@@ -1,7 +1,10 @@
 name: Release
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
     branches:
       - main
 
@@ -11,6 +14,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
       pull-requests: write
@@ -32,9 +36,6 @@ jobs:
 
       - name: Build packages
         run: pnpm run build
-
-      - name: Run tests
-        run: pnpm run test
 
       - name: Create Release Pull Request or Publish
         id: changesets
