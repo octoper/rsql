@@ -1,5 +1,15 @@
 # v1.4.0 (Fri Jul 08 2022)
 
+## 0.0.1
+
+### Patch Changes
+
+- cdbbfb4: Update author and reset changelog
+- ac9d243: Initial release
+- Updated dependencies [cdbbfb4]
+- Updated dependencies [ac9d243]
+  - @resenty/rsql-ast@0.0.1
+
 #### 🚀 Enhancement
 
 - feat: allow customizing quoting behavior of emit (#34) [#35](https://github.com/piotr-oles/rsql/pull/35) (tim.hambourger@concretedata.com [@TimHambourger](https://github.com/TimHambourger))
