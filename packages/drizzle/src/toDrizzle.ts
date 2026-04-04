@@ -1,5 +1,11 @@
 import { and, eq, gt, gte, inArray, lt, lte, ne, notInArray, or, type SQL } from "drizzle-orm";
-import { type ComparisonNode, type ExpressionNode, type LogicNode, isComparisonNode, isLogicNode } from "@resenty/rsql-ast";
+import {
+  type ComparisonNode,
+  type ExpressionNode,
+  type LogicNode,
+  isComparisonNode,
+  isLogicNode,
+} from "@resenty/rsql-ast";
 import type { ToDrizzleOptions, ScalarValue } from "./types";
 import {
   InvalidValueError,

@@ -1,4 +1,10 @@
-import { type ComparisonNode, type ExpressionNode, type LogicNode, isComparisonNode, isLogicNode } from "@resenty/rsql-ast";
+import {
+  type ComparisonNode,
+  type ExpressionNode,
+  type LogicNode,
+  isComparisonNode,
+  isLogicNode,
+} from "@resenty/rsql-ast";
 import type { DrizzleQueryFilter, ScalarValue, ToQueryFiltersOptions } from "./types";
 import {
   InvalidValueError,
