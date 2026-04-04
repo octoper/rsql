@@ -9,7 +9,7 @@ import {
   ValueNode,
   ComparisonOperator,
   LogicOperator,
-} from "rsql-ast";
+} from "@resenty/rsql-ast";
 import {
   AnyToken,
   isOpenParenthesisToken,

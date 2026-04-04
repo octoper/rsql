@@ -1,4 +1,4 @@
-import { VerboseLogicOperators } from "rsql-ast";
+import { VerboseLogicOperators } from "@resenty/rsql-ast";
 import { SeekProcessor } from "../LexerProcessor";
 import { createOperatorToken, OperatorToken } from "../Token";
 import { createScanNonReservedSymbol } from "./scanNonReservedSymbol";

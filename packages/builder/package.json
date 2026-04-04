@@ -1,5 +1,5 @@
 {
-  "name": "rsql-builder",
+  "name": "@resenty/rsql-builder",
   "description": "RSQL High level API",
   "repository": "https://github.com/octoper/rsql.git",
   "license": "MIT",
@@ -31,10 +31,10 @@
     "node": ">= 22"
   },
   "dependencies": {
-    "rsql-ast": "workspace:^"
+    "@resenty/rsql-ast": "workspace:^"
   },
   "devDependencies": {
-    "rsql-emitter": "workspace:^"
+    "@resenty/rsql-emitter": "workspace:^"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

@@ -10,10 +10,10 @@
     "declaration": true,
     "noEmit": true,
     "paths": {
-      "rsql-ast": ["packages/ast/src"],
-      "rsql-builder": ["packages/builder/src"],
-      "rsql-emitter": ["packages/emitter/src"],
-      "rsql-parser": ["packages/parser/src"]
+      "@resenty/rsql-ast": ["packages/ast/src"],
+      "@resenty/rsql-builder": ["packages/builder/src"],
+      "@resenty/rsql-emitter": ["packages/emitter/src"],
+      "@resenty/rsql-parser": ["packages/parser/src"]
     }
   }
 }

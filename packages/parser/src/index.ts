@@ -1,4 +1,4 @@
-import { ExpressionNode, isExpressionNode, isSelectorNode, isValueNode, Node } from "rsql-ast";
+import { ExpressionNode, isExpressionNode, isSelectorNode, isValueNode, Node } from "@resenty/rsql-ast";
 import { createErrorForEmptyInput, createErrorForUnclosedParenthesis, createErrorForUnexpectedToken } from "./Error";
 import lex from "./lexer/lex";
 import Token, {

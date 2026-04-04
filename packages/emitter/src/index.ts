@@ -12,7 +12,7 @@ import {
   LogicNode,
   SelectorNode,
   ValueNode,
-} from "rsql-ast";
+} from "@resenty/rsql-ast";
 
 type Quote = '"' | "'";
 

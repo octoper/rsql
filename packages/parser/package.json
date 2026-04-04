@@ -1,5 +1,5 @@
 {
-  "name": "rsql-parser",
+  "name": "@resenty/rsql-parser",
   "description": "RSQL Parser",
   "repository": "https://github.com/octoper/rsql.git",
   "license": "MIT",
@@ -31,7 +31,7 @@
     "node": ">= 22"
   },
   "dependencies": {
-    "rsql-ast": "workspace:^"
+    "@resenty/rsql-ast": "workspace:^"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

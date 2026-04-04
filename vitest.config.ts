@@ -11,9 +11,6 @@ export default defineConfig({
           globals: true,
           environment: "node",
           include: ["__tests__/**/*.spec.ts"],
-          alias: {
-            "rsql-ast": resolve(__dirname, "packages/ast/src"),
-          },
         },
       },
       {
@@ -23,11 +20,6 @@ export default defineConfig({
           globals: true,
           environment: "node",
           include: ["__tests__/**/*.spec.ts"],
-          alias: {
-            "rsql-ast": resolve(__dirname, "packages/ast/src"),
-            "rsql-builder": resolve(__dirname, "packages/builder/src"),
-            "rsql-emitter": resolve(__dirname, "packages/emitter/src"),
-          },
         },
       },
       {
@@ -37,12 +29,6 @@ export default defineConfig({
           globals: true,
           environment: "node",
           include: ["__tests__/**/*.spec.ts"],
-          alias: {
-            "rsql-ast": resolve(__dirname, "packages/ast/src"),
-            "rsql-builder": resolve(__dirname, "packages/builder/src"),
-            "rsql-emitter": resolve(__dirname, "packages/emitter/src"),
-            "rsql-parser": resolve(__dirname, "packages/parser/src"),
-          },
         },
       },
       {
@@ -52,10 +38,6 @@ export default defineConfig({
           globals: true,
           environment: "node",
           include: ["__tests__/**/*.spec.ts"],
-          alias: {
-            "rsql-ast": resolve(__dirname, "packages/ast/src"),
-            "rsql-parser": resolve(__dirname, "packages/parser/src"),
-          },
         },
       },
     ],

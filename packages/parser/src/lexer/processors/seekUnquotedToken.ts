@@ -1,4 +1,4 @@
-import { ReservedChar, ReservedChars } from "rsql-ast";
+import { ReservedChar, ReservedChars } from "@resenty/rsql-ast";
 import { createUnquotedToken, UnquotedToken } from "../Token";
 import { SeekProcessor } from "../LexerProcessor";
 
