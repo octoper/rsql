@@ -35,8 +35,7 @@
   },
   "devDependencies": {
     "@resenty/rsql-builder": "workspace:^",
-    "@resenty/rsql-parser": "workspace:^",
-    "vitest": "^3.0.0"
+    "@resenty/rsql-parser": "workspace:^"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

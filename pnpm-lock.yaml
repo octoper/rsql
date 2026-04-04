@@ -42,11 +42,7 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/node@25.5.0)
 
-  packages/ast:
-    devDependencies:
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/node@25.5.0)
+  packages/ast: {}
 
   packages/builder:
     dependencies:
@@ -57,9 +53,6 @@ importers:
       '@resenty/rsql-emitter':
         specifier: workspace:^
         version: link:../emitter
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/node@25.5.0)
 
   packages/drizzle:
     dependencies:
@@ -76,9 +69,6 @@ importers:
       drizzle-orm:
         specifier: 1.0.0-beta.20
         version: 1.0.0-beta.20(@types/mssql@9.1.11(@azure/core-client@1.10.1))(mssql@11.0.1(@azure/core-client@1.10.1))
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/node@25.5.0)
 
   packages/emitter:
     dependencies:
@@ -92,19 +82,12 @@ importers:
       '@resenty/rsql-parser':
         specifier: workspace:^
         version: link:../parser
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/node@25.5.0)
 
   packages/parser:
     dependencies:
       '@resenty/rsql-ast':
         specifier: workspace:^
         version: link:../ast
-    devDependencies:
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/node@25.5.0)
 
 packages:
 
