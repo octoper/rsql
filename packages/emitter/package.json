@@ -3,7 +3,7 @@
   "description": "RSQL Emitter",
   "repository": "https://github.com/octoper/rsql.git",
   "license": "MIT",
-  "author": "Piotr Oleś <piotrek.oles@gmail.com>",
+  "author": "octoper <me@octoper.me>",
   "version": "0.0.0",
   "type": "module",
   "sideEffects": false,
