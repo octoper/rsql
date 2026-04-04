@@ -1,5 +1,10 @@
 name: CI
-on: [push]
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -85,11 +90,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-dist
-          path: packages
+      - name: Build packages
+        run: pnpm run build
 
       - name: Create Release Pull Request or Publish
         id: changesets
