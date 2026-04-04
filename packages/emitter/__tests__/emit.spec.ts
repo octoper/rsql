@@ -1,6 +1,6 @@
-import builder from "rsql-builder";
-import { parse } from "rsql-parser";
-import { emit } from "rsql-emitter";
+import builder from "@resenty/rsql-builder";
+import { parse } from "@resenty/rsql-parser";
+import { emit } from "@resenty/rsql-emitter";
 
 describe("emit", () => {
   it.each(["==", "!=", "<=", ">=", "<", ">", "=in=", "=out=", "=le=", "=ge=", "=lt=", "=gt="])(

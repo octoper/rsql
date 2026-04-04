@@ -1,4 +1,4 @@
-import { LogicOperator } from "rsql-ast";
+import { LogicOperator } from "@resenty/rsql-ast";
 import { createOperatorToken, OperatorToken } from "../Token";
 import { SeekProcessor } from "../LexerProcessor";
 

@@ -1,4 +1,4 @@
-import { Node } from "rsql-ast";
+import { Node } from "@resenty/rsql-ast";
 import { AnyToken } from "./lexer/Token";
 
 interface ParserContext {

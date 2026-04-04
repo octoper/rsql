@@ -16,7 +16,7 @@ import {
   ComparisonNode,
   LogicNode,
   ExpressionNode,
-} from "rsql-ast";
+} from "@resenty/rsql-ast";
 
 describe("Node", () => {
   it("exports node factories", () => {

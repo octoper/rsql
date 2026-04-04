@@ -1,4 +1,4 @@
-import { ComparisonOperator, isLogicOperator, isComparisonOperator, LogicOperator, OR, AND } from "rsql-ast";
+import { ComparisonOperator, isLogicOperator, isComparisonOperator, LogicOperator, OR, AND } from "@resenty/rsql-ast";
 
 const TokenType = {
   UNQUOTED: "UNQUOTED",

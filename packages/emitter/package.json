@@ -1,5 +1,5 @@
 {
-  "name": "rsql-emitter",
+  "name": "@resenty/rsql-emitter",
   "description": "RSQL Emitter",
   "repository": "https://github.com/octoper/rsql.git",
   "license": "MIT",
@@ -31,11 +31,11 @@
     "node": ">= 22"
   },
   "dependencies": {
-    "rsql-ast": "workspace:^"
+    "@resenty/rsql-ast": "workspace:^"
   },
   "devDependencies": {
-    "rsql-builder": "workspace:^",
-    "rsql-parser": "workspace:^"
+    "@resenty/rsql-builder": "workspace:^",
+    "@resenty/rsql-parser": "workspace:^"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

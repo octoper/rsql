@@ -17,7 +17,7 @@ import {
   createLogicNode,
   ComparisonNode,
   ExpressionNode,
-} from "rsql-ast";
+} from "@resenty/rsql-ast";
 
 interface Builder {
   comparison(

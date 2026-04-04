@@ -1,5 +1,5 @@
 {
-  "name": "rsql-ast",
+  "name": "@resenty/rsql-ast",
   "description": "RSQL AST definitions and functions",
   "repository": "https://github.com/octoper/rsql.git",
   "license": "MIT",

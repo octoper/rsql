@@ -1,5 +1,5 @@
-import builder from "rsql-builder";
-import { emit } from "rsql-emitter";
+import builder from "@resenty/rsql-builder";
+import { emit } from "@resenty/rsql-emitter";
 
 describe("builder", () => {
   it("creates 1 level depth query", () => {
