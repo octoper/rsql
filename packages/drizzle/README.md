@@ -1,4 +1,6 @@
-# rsql-drizzle
+# @resenty/rsql-drizzle
+
+> **Warning:** This package is unstable and not safe for production use. The API may change without notice.
 
 RSQL to [Drizzle ORM](https://orm.drizzle.team/) `where` conditions.
 
